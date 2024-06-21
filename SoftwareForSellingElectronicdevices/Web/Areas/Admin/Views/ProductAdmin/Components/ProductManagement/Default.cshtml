@@ -1,0 +1,224 @@
+﻿@model Data.DTOs.ProductDTO
+<form asp-controller="ProductAdmin" asp-action="@ViewBag.Action" method="post" enctype="multipart/form-data" class="modal-dialog modal-xl">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title h4">@ViewBag.Action PRODUCT</h5>
+            <button type="button" class="close" data-dismiss="modal">
+                <i class="anticon anticon-close"></i>
+            </button>
+        </div>
+       
+        <div class="modal-body">
+            <input hidden asp-for="Id" />
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#base-procuct" role="tab" aria-controls="base-procuct" aria-selected="true">BASE INFOR</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#config-product" role="tab" aria-controls="config-product" aria-selected="false">CONFIG INFOR</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#desciption" role="tab" aria-controls="desciption" aria-selected="false">DESCRIPTION</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#image" role="tab" aria-controls="image" aria-selected="false">IMAGES</a>
+                </li>
+            </ul>
+            <div class="tab-content m-t-15" id="myTabContent">
+                <div class="tab-pane fade show active" id="base-procuct" role="tabpanel" aria-labelledby="base-product">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group" style="display: grid">
+                                    <label class="font-weight-semibold">NAME PHONE</label>
+                                    <select asp-for="ProductName" class="select2" id="nameProductSelect" data-preselect-keys="@Model?.ProductName"></select>
+                                    <span asp-validation-for="ProductName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group" style="display: grid">
+                                    <label class="font-weight-semibold">BRAND</label>
+                                    <select class="select2" id="brandSelect" data-preselect-keys="@Model?.BrandId" asp-for="BrandId">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group" style="display: grid">
+                                    <label class="font-weight-semibold text-uppercase">status</label>
+                                    <select class="select2" asp-for="Status">
+                                        <option value="1">Đang kinh doanh</option>
+                                        <option value="0">Ngừng kinh doanh</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group" style="display: grid">
+                                    <label class="font-weight-semibold">CATEGORY</label>
+                                    <select class="select2" multiple id="categorySelect" data-preselect-keys="@(Model==null? null : string.Join(",",Model.ListIdCategory))" asp-for="ListIdCategory">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group" style="display: grid">
+                                    <label class="font-weight-semibold text-uppercase">weight</label>
+                                    <input type="number" asp-for="Weight" class="form-control" placeholder="WEIGHT">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group" style="display: grid">
+                                    <label class="font-weight-semibold text-uppercase">PRICE</label>
+                                    <input type="number" asp-for="Price" class="form-control" placeholder="PRICE">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group" style="display: grid">
+                                    <label class="font-weight-semibold text-uppercase">Quantity</label>
+                                    <input type="number" asp-for="Quantity" class="form-control" placeholder="QUANTITY">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="config-product" role="tabpanel" aria-labelledby="config-product-tab">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-2">
+                                <div class="form-group" style="display: grid">
+                                    <label class="font-weight-semibold text-uppercase">
+                                        Camera after
+                                    </label>
+                                    <select asp-for="FrontCamera" data-preselect-keys="@Model?.FrontCamera" class="select2" id="frontCameraSelect"></select>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <div class="form-group" style="display: grid">
+                                    <label class="font-weight-semibold text-uppercase">
+                                        Camera before
+                                    </label>
+                                    <select asp-for="BackCamera" data-preselect-keys="@Model?.BackCamera" class="select2" id="backCameraSelect"></select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group" style="display: grid">
+                                    <label class="font-weight-semibold">CHIP</label>
+                                    <select class="select2" id="chipSelect" asp-for="ChipId" data-preselect-keys="@Model?.ChipId">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group" style="display: grid">
+                                    <label class="font-weight-semibold text-uppercase">Battery</label>
+                                    <select class="select2" id="batterySelect" asp-for="BatteryId" data-preselect-keys="@Model?.BatteryId">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group" style="display: grid">
+                                    <label class="font-weight-semibold text-uppercase">Rom memory</label>
+                                    <select class="select2" id="romMemorySelect" asp-for="ROMMemoryId" data-preselect-keys="@Model?.ROMMemoryId">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group" style="display: grid">
+                                    <label class="font-weight-semibold text-uppercase">charging port</label>
+                                    <select class="select2" id="chargingPortSelect" asp-for="ChargingPortId" data-preselect-keys="@Model?.ChargingPortId">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group" style="display: grid">
+                                    <label class="font-weight-semibold text-uppercase">memory Stick</label>
+                                    <select class="select2" id="memoryStickSelect" asp-for="MemoryStickId" data-preselect-keys="@Model?.MemoryStickId">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group" style="display: grid">
+                                    <label class="font-weight-semibold text-uppercase">operating system</label>
+                                    <select class="select2" id="operatingSystemSelect" asp-for="OperatingSystemProductId" data-preselect-keys="@Model?.OperatingSystemProductId">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group" style="display: grid">
+                                    <label class="font-weight-semibold text-uppercase">Screen</label>
+                                    <select class="select2" id="screenSelect" asp-for="ScreenId" data-preselect-keys="@Model?.ScreenId">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group" style="display: grid">
+                                    <label class="font-weight-semibold text-uppercase">Color</label>
+                                    <select class="select2" id="colorSelect" asp-for="ColorMSId" data-preselect-keys="@Model?.ColorMSId">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group" style="display: grid">
+                                    <label class="font-weight-semibold text-uppercase">Ram Memory</label>
+                                    <select class="select2" id="ramMemorySelect" asp-for="RAMMemoryId" data-preselect-keys="@Model?.RAMMemoryId">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group" style="display: grid">
+                                    <label class="font-weight-semibold text-uppercase">SIM</label>
+                                    <select class="select2" multiple id="simTypeSelect" asp-for="ListIdSim" data-preselect-keys="@(Model == null? null : string.Join(",",Model.ListIdSim))">
+                                    </select>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="desciption" role="tabpanel" aria-labelledby="desciption-tab">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group" style="display: grid">
+                                    <label class="font-weight-semibold text-uppercase">Description</label>
+                                    <textarea asp-for="Description"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="image" role="tabpanel" aria-labelledby="image-tab">
+                    <div class="card-body">
+                        <input type="file" id="imageUpload" class="mb-2" multiple name="files[]">
+                        <div id="imageContainer" class="d-flex justify-content-center mb-2">
+                            @if (Model != null)
+                            {
+                                @for (int i = 0; i < Model!.ListUrl!.Count; i++)
+                                {
+                                    if (Model.indexMainImage == i)
+                                    {
+                                        <div class="avatar avatar-image rounded ml-1 url-image" style="height: 120px; width: 120px;">
+                                            <img src="/ImageProduct/@Model.ListUrl[i]" alt="">
+                                            <i class="fas fa-star star-icon active"></i>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="avatar avatar-image rounded ml-1 url-image" style="height: 120px; width: 120px;">
+                                            <img src="/ImageProduct/@Model.ListUrl[i]" alt="">
+                                            <i class="fas fa-star star-icon"></i>
+                                        </div>
+                                    }
+                                }
+                            }
+                        </div>
+                        <input hidden name="indexMainImage" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default m-r-10" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary"><i class="anticon anticon-plus"></i> @ViewBag.Action</button>
+        </div>
+    </div>
+</form>
+
+

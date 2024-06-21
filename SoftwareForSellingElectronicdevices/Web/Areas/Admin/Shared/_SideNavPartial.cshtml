@@ -1,0 +1,55 @@
+﻿@functions {
+    public string IsLinkActive(string url)
+    {
+        return Context.Request.Path.StartsWithSegments(url) ? "active" : "";
+    }
+}
+<div class="side-nav">
+    <div class="side-nav-inner">
+        <ul class="side-nav-menu scrollable">
+            <li class="nav-item dropdown open">
+                <a class="dropdown-toggle" href="javascript:void(0);">
+                    <span class="icon-holder">
+                        <i class="anticon anticon-dashboard"></i>
+                    </span>
+                    <span class="title">Dashboard</span>
+                    <span class="arrow">
+                        <i class="arrow-icon"></i>
+                    </span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="@IsLinkActive("/admin/productadmin/management")">
+                        <a href="/admin/productadmin/management">Product</a>
+                    </li>
+                    <li class="@IsLinkActive("/admin/brand/management")">
+                        <a href="/admin/brand/management">Brand</a>
+                    </li>
+                    <li class="@IsLinkActive("/admin/rammemory/management")">
+                        <a href="/admin/rammemory/management">Ram</a>
+                    </li>
+                    <li class="@IsLinkActive("/admin/color/management")">
+                        <a href="/admin/color/management">Color</a>
+                    </li>
+                    <li class="@IsLinkActive("/admin/Battery/management")">
+                        <a href="/admin/Battery/management">Battery</a>
+                    </li>
+                    <li class="@IsLinkActive("/admin/Chip/management")">
+                        <a href="/admin/Chip/management">Chip</a>
+                    </li>
+                    <li class="@IsLinkActive("/admin/Category/management")">
+                        <a href="/admin/Category/management">Category</a>
+                    </li>
+                    <li class="@IsLinkActive("/admin/Screen/management")">
+                        <a href="/admin/Screen/management">Screen</a>
+                    </li>
+                    <li class="@IsLinkActive("/admin/MemoryStick/management")">
+                        <a href="/admin/MemoryStick/management">MemoryStick</a>
+                    </li>
+                    <li class="@IsLinkActive("/admin/RomMemory/management")">
+                        <a href="/admin/RomMemory/management">RomMemory</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>

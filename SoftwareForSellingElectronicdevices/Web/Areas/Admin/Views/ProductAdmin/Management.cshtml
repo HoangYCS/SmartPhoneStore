@@ -1,0 +1,377 @@
+﻿@*@model List<Data.ViewModel.ProductViewModel>*@
+@section Styles{
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+}
+<style>
+    .star-icon {
+        position: absolute;
+        top: 1px;
+        right: 1px;
+        font-size: 15px;
+        color: #20261b;
+        cursor: pointer;
+    }
+
+        .star-icon.active {
+            color: gold;
+        }
+</style>
+<div class="modal bd-example-modal-xl" id="form-product-management">
+
+</div>
+<button onclick="Test()">Test</button>
+<script>
+    function Test() {
+        $('#modal-import').modal('show')
+    }
+</script>
+<div class="modal fade" id="modal-import">
+    <div class="modal-dialog modal-dialog-centered">
+        <form asp-controller="productadmin" asp-action="ImportProducts" enctype="multipart/form-data" class="modal-content">
+            <div class="modal-header align-items-center" style=" background: #00090b; color: white">
+                <i class="far fa-bell m-r-5" style="font-size: 33px"></i>
+                <h5 style="color: white" class="modal-title" id="exampleModalLabel">IMPORT FILE</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <i class="anticon anticon-close"></i>
+                </button>
+            </div>
+            <div class="modal-body" style="background: #d3f6ff;">
+                <span style="color: red">Sử dụng template mẫu để import: </span><a href="/Admin/SanPhamChiTiet/DownloadFileTemplate">Download</a>
+                <br />
+                <input class="my-2" type="file" name="file" accept=".xlsx, .xls" />
+                <p class="mt-3" id="file-excel-info" style="padding-top: 5px;color: #1c0497;"></p>
+            </div>
+            <div class="modal-footer" style="background: #d0dae3">
+                <button class="btn btn-kio" type="submit">Import</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="page-header">
+    <h2 class="header-title">PRODUCT MANAGEMENT</h2>
+    <div class="header-sub-title">
+        <nav class="breadcrumb breadcrumb-dash">
+            <a href="#" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Home</a>
+            <span class="breadcrumb-item active">PRODUCT MANAGEMENT</span>
+        </nav>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="row m-b-30">
+            <div class="col-lg-8">
+                <div class="d-md-flex">
+                    <div class="m-b-10 m-r-15">
+                        <select class="custom-select" style="min-width: 180px;">
+                            <option selected="">Catergory</option>
+                            <option value="all">All</option>
+                            <option value="homeDeco">Home Decoration</option>
+                            <option value="eletronic">Eletronic</option>
+                            <option value="jewellery">Jewellery</option>
+                        </select>
+                    </div>
+                    <div class="m-b-10">
+                        <select class="custom-select" style="min-width: 180px;">
+                            <option selected="">Status</option>
+                            <option value="all">All</option>
+                            <option value="inStock">In Stock </option>
+                            <option value="outOfStock">Out of Stock</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 text-right">
+                <button class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-xl" onclick="HandleAddProductClick()">
+                    <i class="anticon anticon-plus-circle m-r-5"></i>
+                    <span>Add Product</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover e-commerce-table" id="table-productadmin">
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+
+
+
+    function HandleAddProductClick(id = null) {
+        $.ajax({
+            url: '/admin/productadmin/GetComponentProductManagement',
+            type: 'GET',
+            data: {
+                id
+            },
+            success: function (response) {
+                updateSelect('/admin/category/GetCategories', 'categorySelect', 'id', 'name', null, '/admin/category/create', true);
+                updateSelect('/admin/productadmin/getnames', 'nameProductSelect');
+                updateSelect('/admin/color/GetColors', 'colorSelect', 'id', 'nameColorMS', null, '/admin/color/create');
+                updateSelect('/admin/rammemory/GetRammemories', 'ramMemorySelect', 'id', 'nameRAMMemory', null, '/admin/rammemory/create');
+                updateSelect('/admin/rommemory/GetRommemories', 'romMemorySelect', 'id', 'nameROMMemory', null, '/admin/rommemory/create');
+                updateSelect('/admin/brand/GetBrands', 'brandSelect', 'id', 'brandName', null, '/admin/brand/create');
+                updateSelect('/admin/simtype/Getsimtypes', 'simTypeSelect', 'id', 'type', null, '/admin/simtype/create', true);
+                updateSelect('/admin/MemoryStick/GetMemorySticks', 'memoryStickSelect', 'id', 'nameMemoryStick', null, '/admin/MemoryStick/create');
+                updateSelect('/admin/chip/GetChips', 'chipSelect', 'id', 'nameChip', null, '/admin/chip/create');
+                updateSelect('/admin/screen/GetScreens', 'screenSelect', 'id', 'nameScreen', null, '/admin/screen/create');
+                updateSelect('/admin/chargingport/GetChargingPorts', 'chargingPortSelect', 'id', 'chargingPortName', null, '/admin/chargingport/create');
+                updateSelect('/admin/operatingsystem/GetOperatingSystems', 'operatingSystemSelect', 'id', 'nameOperatingSystem', null, '/admin/operatingsystem/create');
+                updateSelect(
+                    '/admin/battery/GetBatterys',
+                    'batterySelect',
+                    'id',
+                    null,
+                    (item) => item.batteryType + ' ' + item.batteryCapacity,
+                    '/admin/battery/create'
+
+                );
+                updateSelect(
+                    '/admin/productadmin/GetConfigsFrontCamera',
+                    'frontCameraSelect',
+                );
+                updateSelect(
+                    '/admin/productadmin/GetConfigsBackCamera',
+                    'backCameraSelect',
+                );
+
+
+                $("#form-product-management").empty().html(response).modal('show');
+
+                handleImage()
+
+                $('#form-product-management form').off('submit').on('submit', function (event) {
+                    event.preventDefault();
+                    $.ajax({
+                        type: $(this).attr("method"),
+                        url: $(this).attr("action"),
+                        data: new FormData(this),
+                        processData: false,
+                        contentType: false,
+                        success: function (response) {
+                            if (response.success) {
+                                toastr.success('The operation was successful', 'Notification', {
+                                    closeButton: true,
+                                    progressBar: true,
+                                    positionClass: 'toast-top-right'
+                                });
+                                table.draw();
+                                $("#form-product-management").modal('hide')
+                            } else {
+                                toastr.error(response.notification, 'Notification', {
+                                    closeButton: true,
+                                    progressBar: true,
+                                    positionClass: 'toast-top-right'
+                                });
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.log("Yêu cầu AJAX thất bại");
+                            console.log("Trạng thái: " + status);
+                            console.log("Lỗi: " + error);
+                            toastr.error('Failed action', 'Notification', {
+                                closeButton: true,
+                                progressBar: true,
+                                positionClass: 'toast-top-right'
+                            });
+                            $("#form-product-management").modal('hide')
+                        }
+                    });
+                });
+            },
+            error: function (xhr, status, error) {
+                console.log("Yêu cầu AJAX thất bại");
+                console.log("Trạng thái: " + status);
+                console.log("Lỗi: " + error);
+            }
+        });
+    }
+
+    function handleImage() {
+        $('#imageUpload').on('change', function (event) {
+            var files = event.target.files;
+            var $imageContainer = $('#imageContainer');
+
+            $imageContainer.empty();
+
+            $.each(files, function (index, file) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    var imgDiv = $('<div>', {
+                        class: 'avatar avatar-image rounded ml-1',
+                        css: {
+                            height: '120px',
+                            width: '120px'
+                        },
+                        name: 'file[' + index + ']'
+                    });
+
+                    var img = $('<img>', {
+                        src: e.target.result,
+                        alt: ''
+                    });
+
+                    var starIcon = $('<i>', {
+                        class: 'fas fa-star star-icon'
+                    });
+
+                    starIcon.on('click', function () {
+                        $('.star-icon').removeClass('active');
+                        $(this).addClass('active');
+                        $("input[name='indexMainImage']").val(index)
+                    });
+
+                    imgDiv.append(img).append(starIcon);
+                    $imageContainer.append(imgDiv);
+
+                    if (index === 0) {
+                        $("input[name='indexMainImage']").val(0)
+                        starIcon.addClass('active');
+                    }
+                };
+
+                reader.readAsDataURL(file);
+            });
+        });
+        $(".url-image").click(function () {
+            $(".star-icon").removeClass("active");
+            $(this).find(".star-icon").addClass("active");
+            var index = $(this).index();
+            $("input[name='indexMainImage']").val(index);
+        });
+    }
+    var table;
+
+    $(() => {
+        $('.modal').on('show.bs.modal', function () {
+            $(this).css('opacity', 0).animate({ opacity: 1 }, 900);
+        });
+
+        table = $('#table-productadmin').DataTable({
+            ajax: {
+                url: '/admin/productadmin/GetProducts',
+                type: 'POST',
+                dataType: 'json',
+                data: function (e) {
+                    return JSON.stringify({
+                        draw: e.draw,
+                        start: e.start,
+                        length: e.length
+                    });
+                },
+                contentType: 'application/json',
+                cache: true
+            },
+            serverSide: true,
+            paging: true,
+            columns: [
+                {
+                    data: null,
+                    title: '#',
+                    render: function (data, type, row, meta) {
+                        return meta.row + 1;
+                    },
+                    orderable: false
+                },
+                {
+                    data: null,
+                    title: 'Sản phẩm',
+                    render: function (data, type, row, meta) {
+                        return `
+                        <div class="d-flex align-items-center">
+                            <img class="img-fluid rounded" src="/ImageProduct/${data.url}" style="max-width: 60px" alt="">
+                            <h6 class="m-b-0 m-l-10">${data.phoneName}</h6>
+                        </div>
+                        `
+                    },
+                    orderable: false
+                },
+                {
+                    data: 'brand',
+                    title: 'Brand',
+                    orderable: false
+                },
+                {
+                    data: 'ram',
+                    title: 'Ram',
+                    orderable: false
+                },
+                {
+                    data: 'rom',
+                    title: 'Rom',
+                    orderable: false
+                },
+                {
+                    data: 'battery',
+                    title: 'Battery',
+                    orderable: false
+                },
+                {
+                    data: 'screen',
+                    title: 'Screen',
+                    orderable: false
+                },
+                {
+                    data: 'chip',
+                    title: 'Chip',
+                    orderable: false
+                },
+                {
+                    data: 'price',
+                    title: 'Price',
+                    orderable: false
+                },
+                {
+                    data: 'status',
+                    title: 'Status',
+                    render: function (data, type, row, meta) {
+                        return `
+                            <div class="d-flex align-items-center">
+                                <div class="badge badge-success badge-dot m-r-10"></div>
+                                <div>${data}</div>
+                            </div>
+                        `;
+                    },
+                    orderable: false
+
+                },
+                {
+                    data: null,
+                    title: '#',
+                    render: function (data, type, row, meta) {
+                        return `
+                                    <div class="btn-group dropdown" style="cursor: pointer">
+                                        <i class="fas fa-bars" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                                        <div class="dropdown-menu">
+                                            <button class="dropdown-item" type="button" onclick="HandleAddProductClick(${data.id})">Edit</button>
+                                            <button class="dropdown-item" type="button">Delete</button>
+                                        </div>
+                                    </div>
+                                `;
+                    },
+                    orderable: false
+                }
+
+            ],
+            initComplete: function (settings, json) {
+                console.log(json);
+            },
+        })
+
+    })
+</script>
+
+@section Scripts{
+    <script src="~/assets/vendors/datatables/jquery.dataTables.min.js" defer></script>
+    <script src="~/assets/vendors/datatables/dataTables.bootstrap.min.js" defer></script>
+    <script src="~/assets/js/pages/datatables.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="~/assets/js/CustomSelect2Js.js"></script>
+}

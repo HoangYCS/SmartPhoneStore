@@ -1,0 +1,271 @@
+﻿@model Data.DTOs.CheckOutConfimDTO
+<div class="btn-group w-100" role="group" aria-label="Default button group" style="margin-bottom: 20px">
+    <a class="btn btn-outline-primary text-uppercase" href="/"><i class="fa-solid fa-house"></i> Return to home page</a>
+    <a class="btn btn-outline-primary text-uppercase" href="/cart/mycart"><i class="fa-solid fa-cart-shopping"></i> Back to cart</a>
+</div>
+<header class="w-100 d-flex justify-content-center align-items-center shadow-sm bg-body-tertiary">
+    <h2 class="text-primary text-uppercase">Check Out</h2>
+</header>
+
+<form asp-action="buy" asp-controller="cart" method="post">
+    <div class="row my-2">
+        <div class="col-md-5">
+            <div class="card">
+                <header class="bg-info d-flex justify-content-center px-2">
+                    <h5 class="text-uppercase">Confirm the address</h5>
+                </header>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <strong class="form-label">Name</strong>
+                        <input type="text" asp-for="Name" required class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <strong class="form-label">Phone</strong>
+                        <input type="text" asp-for="Phone" required class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <strong for="province">Province/City:</strong>
+                        <select class="form-select" id="province" required asp-for="ProvinceId">
+                            <option value="">Select Province/City</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <strong for="district">District:</strong>
+                        <select class="form-select" id="district" required asp-for="DistrictId">
+                            <option value="">Select District</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <strong for="ward">Ward:</strong>
+                        <select class="form-select" id="ward" required asp-for="WardCode">
+                            <option value="">Select Ward</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <strong class="form-label">Địa chỉ cụ thể</strong>
+                        <textarea class="d-block w-100" required asp-for="SpecificAddress"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <strong class="form-label">Ghi chú</strong>
+                        <textarea class="d-block w-100" asp-for="Note"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="card my-1">
+                <header class="bg-info d-flex justify-content-center px-2">
+                    <h5 class="text-uppercase">Phương thức thanh toán</h5>
+                </header>
+                <div class="card-body">
+                    @{
+                        bool isFirst = true;
+                    }
+                    @foreach (var item in ViewBag.Payments as List<Data.DTOs.PaymentDTO>)
+                    {
+                        <div class="form-check">
+                            <input class="form-check-input" asp-for="PaymentId" value="@item.Id" type="radio" id="payment@(item.Id)" checked="@isFirst">
+                            <label class="form-check-label" for="payment@(item.Id)">
+                                @item.Name
+                            </label>
+                        </div>
+                        isFirst = false;
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-md-7">
+            <header class="bg-info d-flex justify-content-center px-2">
+                <h5 class="text-uppercase">Onion cart information</h5>
+            </header>
+            <div class="card">
+                <div class="card-body">
+                    @foreach (var item in ViewBag.Cart as List<Data.ViewModel.CartLineVM>)
+                    {
+                        <div class="row g-0 border border-bottom my-1">
+                            <div class="col-md-3 d-flex justify-content-center align-items-center">
+                                <img src="/ImageProduct/@item.ProductDetailUserVM.Urls.FirstOrDefault()" style="width: 65%; height: 120px">
+                            </div>
+                            <div class="col-md-9">
+                                <div class="card-body" style="font-size: 0.875rem;">
+                                    <!-- Adjust font size here -->
+                                    <h5 class="card-title">@item.ProductDetailUserVM.Name</h5>
+                                    <div class="row mx-3 border-top border-bottom">
+                                        <div class="col-7">
+                                            <p class="card-text">
+                                                <span><strong>- Brand: </strong>@item.ProductDetailUserVM.Brand</span><br />
+                                                <span><strong>- Ram: </strong>@item.ProductDetailUserVM.Ram</span><br />
+                                                <span><strong>- Category: </strong>@item.ProductDetailUserVM.Tags</span><br />
+                                                <span><strong>- Sim: </strong>@item.ProductDetailUserVM.Sims</span><br />
+                                                <span><strong>- Screen: </strong>@item.ProductDetailUserVM.Screen</span>
+                                            </p>
+                                        </div>
+                                        <div class="col-5 d-flex flex-column justify-content-sm-center">
+                                            <p class="card-text">
+                                                <small class="text-body-secondary" style="color: red">Price: @item.ProductDetailUserVM.Price.ToString("C", new System.Globalization.CultureInfo("vi-VN"))</small>/x1
+                                            </p>
+                                            <p class="card-text">
+                                                <small class="text-body-secondary" style="color: red">Quantity: @item.Quantity - TOTAL: @((item.ProductDetailUserVM.Price * item.Quantity).ToString("C", new System.Globalization.CultureInfo("vi-VN")))</small>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+                </div>
+            </div>
+            <div class="card price__view p-1 my-1">
+                <span><strong>- Phí ship: </strong>0 ₫</span>
+                <span><strong>- Tạm tính: </strong>@ViewBag.Total.ToString("C", new System.Globalization.CultureInfo("vi-VN"))</span>
+                <span><strong>- Tổng: </strong>@ViewBag.Total.ToString("C", new System.Globalization.CultureInfo("vi-VN"))</span>
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-outline-info text-uppercase w-100">Đặt hàng</button>
+</form>
+<script>
+    function updatePriceView(selectedDistrictId, selectedWardId) {
+        $.ajax({
+            url: '/cart/GetPriceViewCart',
+            type: 'Get',
+            data: {
+                selectedDistrictId,
+                selectedWardId
+            },
+            success: function (response) {
+                $('.price__view').empty().append(response);
+            },
+            error: function (xhr, status, error) {
+                console.log("Yêu cầu AJAX thất bại");
+                console.log("Trạng thái: " + status);
+                console.log("Lỗi: " + error);
+            }
+        });
+    }
+    $(document).ready(function () {
+        const apiToken = '5ee6d47f-ff27-11ed-a967-deea53ba3605';
+
+        let selectedProvinceId = null;
+        let selectedDistrictId = null;
+        let selectedWardId = null;
+
+        function fetchProvinces() {
+            $.ajax({
+                url: 'https://online-gateway.ghn.vn/shiip/public-api/master-data/province',
+                method: 'GET',
+                headers: {
+                    'Token': apiToken
+                },
+                success: function (data) {
+                    const provinces = data.data;
+                    provinces.forEach(province => {
+                        $('#province').append(`<option value="${province.ProvinceID}">${province.ProvinceName}</option>`);
+                    });
+                },
+                error: function (err) {
+                    console.error(err);
+                }
+            });
+        }
+        function fetchDistricts(provinceId) {
+            $.ajax({
+                url: 'https://online-gateway.ghn.vn/shiip/public-api/master-data/district',
+                method: 'GET',
+                headers: {
+                    'Token': apiToken
+                },
+                data: {
+                    province_id: provinceId
+                },
+                success: function (data) {
+                    const districts = data.data;
+                    $('#district').empty().append('<option value="">Select District</option>');
+                    districts.forEach(district => {
+                        $('#district').append(`<option value="${district.DistrictID}">${district.DistrictName}</option>`);
+                    });
+                },
+                error: function (err) {
+                    console.error(err);
+                }
+            });
+        }
+
+        function fetchWards(districtId) {
+            $.ajax({
+                url: 'https://online-gateway.ghn.vn/shiip/public-api/master-data/ward',
+                method: 'GET',
+                headers: {
+                    'Token': apiToken
+                },
+                data: {
+                    district_id: districtId
+                },
+                success: function (data) {
+                    const wards = data.data;
+                    $('#ward').empty().append('<option value="">Select Ward</option>');
+                    wards.forEach(ward => {
+                        $('#ward').append(`<option value="${ward.WardCode}">${ward.WardName}</option>`);
+                    });
+                },
+                error: function (err) {
+                    console.error(err);
+                }
+            });
+        }
+
+        $('#province').change(function () {
+            selectedProvinceId = $(this).val();
+            if (selectedProvinceId) {
+                fetchDistricts(selectedProvinceId);
+                $('#ward').empty().append('<option value="">Select Ward</option>');
+            } else {
+                $('#district').empty().append('<option value="">Select District</option>');
+                $('#ward').empty().append('<option value="">Select Ward</option>');
+            }
+            selectedDistrictId = null;
+            selectedWardId = null;
+            updatePriceView(selectedDistrictId, selectedWardId);
+        });
+
+        $('#district').change(function () {
+            selectedDistrictId = $(this).val();
+            if (selectedDistrictId) {
+                fetchWards(selectedDistrictId);
+            } else {
+                $('#ward').empty().append('<option value="">Select Ward</option>');
+            }
+            selectedWardId = null;
+            updatePriceView(selectedDistrictId, selectedWardId);
+        });
+
+        $('#ward').change(function () {
+            selectedWardId = $(this).val();
+            updatePriceView(selectedDistrictId, selectedWardId);
+        });
+
+        $('#myForm').submit(function (event) {
+            var province = $('#province').val();
+            var district = $('#district').val();
+            var ward = $('#ward').val();
+            var errorMessage = '';
+
+            if (province === '') {
+                errorMessage += 'Please select a Province/City.\n';
+            }
+            if (district === '') {
+                errorMessage += 'Please select a District.\n';
+            }
+            if (ward === '') {
+                errorMessage += 'Please select a Ward.\n';
+            }
+
+            if (errorMessage) {
+                alert(errorMessage);
+                event.preventDefault();
+            }
+        });
+
+        fetchProvinces();
+    });
+
+</script>

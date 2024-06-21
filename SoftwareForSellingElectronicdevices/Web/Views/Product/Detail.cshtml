@@ -1,0 +1,175 @@
+﻿@model Data.ViewModel.ProductDetailUserVM
+<div class="btn-group w-100" role="group" aria-label="Default button group" style="margin-bottom: 20px">
+    <a class="btn btn-outline-primary text-uppercase" href="/"><i class="fa-solid fa-house"></i> Return to home page</a>
+    <a class="btn btn-outline-primary text-uppercase" href="/cart/mycart"><i class="fa-solid fa-cart-shopping"></i> Go to cart</a>
+</div>
+<h2 class="text-center bg-light">
+  @Model.Name.ToUpper()
+</h2>
+<div class="row">
+    <div class="col-md-5">
+        <div id="carouselExampleCaptions" class="carousel slide mb-2">
+            <div class="carousel-indicators">
+                @{
+                    for (int i = 0; i < Model.Urls.Count; i++)
+                    {
+                        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="@i" class="@(i == 0 ? "active" : "")" aria-label="Slide @(i + 1)"></button>;
+                    }
+                }
+            </div>
+            <div class="carousel-inner">
+                @{
+                    var isFirstItem = true;
+                }
+                @foreach (var item in Model.Urls)
+                {
+                    <div class="carousel-item @(isFirstItem ? "active" : "")">
+                        <img src="/ImageProduct/@item" class="d-block w-100" style="height: 491px" alt="...">
+                    </div>
+                    isFirstItem = false;
+                }
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+    <div class="col-md-7">
+        <table class="table table-bordered">
+            <tbody>
+                <tr>
+                    <th scope="row">Ram</th>
+                    <td>@Model.Ram</td>
+                </tr>
+                <tr>
+                    <th scope="row">Rom</th>
+                    <td>@Model.Rom</td>
+                </tr>
+                <tr>
+                    <th scope="row">Screen</th>
+                    <td>@Model.Screen</td>
+                </tr>
+                <tr>
+                    <th scope="row">Battery</th>
+                    <td>@Model.Battery</td>
+                </tr>
+                <tr>
+                    <th scope="row">Charging Port</th>
+                    <td>@Model.ChargingPort</td>
+                </tr>
+                <tr>
+                    <th scope="row">Chip</th>
+                    <td>@Model.Chip</td>
+                </tr>
+                <tr>
+                    <th scope="row">Memory Stick</th>
+                    <td>@Model.MemoryStick</td>
+                </tr>
+                <tr>
+                    <th scope="row">Operating System</th>
+                    <td>@Model.OperatingSystem</td>
+                </tr>
+                <tr>
+                    <th scope="row">Rear Camera</th>
+                    <td>@Model.RearCamera</td>
+                </tr>
+                <tr>
+                    <th scope="row">Front Camera</th>
+                    <td>@Model.FrontCamera</td>
+                </tr>
+                <tr>
+                    <th scope="row">Sims</th>
+                    <td>@Model.Sims</td>
+                </tr>
+                <tr>
+                    <th scope="row">Category</th>
+                    <td>@Model.Tags</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <style>
+        .product-count {
+            margin-top: 15px;
+        }
+
+            .product-count .qtyminus,
+            .product-count .qtyplus {
+                width: 34px;
+                height: 34px;
+                background: #0d6efd;
+                text-align: center;
+                font-size: 19px;
+                line-height: 36px;
+                color: #fff;
+                cursor: pointer;
+            }
+
+            .product-count .qtyminus {
+                border-radius: 3px 0 0 3px;
+            }
+
+            .product-count .qtyplus {
+                border-radius: 0 3px 3px 0;
+            }
+
+            .product-count .qty {
+                width: 60px;
+                text-align: center;
+            }
+    </style>
+</div>
+<div class="row">
+    <div class="col-md-5">
+        <h4 class="text-center" style="color: red; margin-top: 20px">
+            <strong>Price: </strong> @Model.Price.ToString("C", new System.Globalization.CultureInfo("vi-VN"))
+        </h4>
+    </div>
+    <form asp-action="AddItem" asp-controller="Cart" method="post" class="col-md-5">
+        <div class="product-count d-flex">
+            <div action="#" class="d-flex">
+                <div class="qtyminus h-100">-</div>
+                <input type="number" name="quantity" value="1" class="qty">
+                <input name="productId" value="@Model.Id  " hidden/>
+                <div class="qtyplus h-100">+</div>
+            </div>
+            <button type="submit" class="btn btn-primary rounded ms-1">Add to Cart</button>
+        </div>
+    </form>
+</div>
+
+<div class="Describe my-2">
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Description</a>
+        </li>
+    </ul>
+    <div class="tab-content p-3">
+        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+           @Model.Description
+        </div>
+    </div>
+</div>
+
+<script>
+    $(() => {
+        $(".qtyminus").on("click", function () {
+            var now = $(".qty").val();
+            if ($.isNumeric(now)) {
+                if (parseInt(now) - 1 > 0) { now--; }
+                $(".qty").val(now);
+            }
+        })
+        $(".qtyplus").on("click", function () {
+            var now = $(".qty").val();
+            if ($.isNumeric(now)) {
+                $(".qty").val(parseInt(now) + 1);
+            }
+        });
+    })
+</script>

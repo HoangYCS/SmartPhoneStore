@@ -1,0 +1,258 @@
+﻿@model Data.ViewModel.PageBasic<Data.ViewModel.ProductUserViewModel>
+@inject Microsoft.AspNetCore.Mvc.Routing.IUrlHelperFactory UrlHelperFactory
+
+@{
+    var urlHelper = UrlHelperFactory.GetUrlHelper(ViewContext);
+    var queryString = urlHelper.ActionContext.HttpContext.Request.QueryString;
+}
+
+@inject IHttpContextAccessor Httpcontext
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+@functions {
+    string BuildPaginationUrl(int page)
+    {
+        string url = "?currentPage=" + page;
+
+        if (Httpcontext.HttpContext.Request.Query["brands"].Count > 0)
+        {
+            foreach (var brand in Httpcontext.HttpContext.Request.Query["brands"])
+            {
+                url += "&brands=" + brand;
+            }
+        }
+
+        if (Httpcontext.HttpContext.Request.Query["colors"].Count > 0)
+        {
+            foreach (var color in Httpcontext.HttpContext.Request.Query["colors"])
+            {
+                url += "&colors=" + color;
+            }
+        }
+
+        return url;
+    }
+}
+
+<style>
+    .carousel-item img {
+        width: 100%;
+        height: auto;
+        max-height: 450px;
+        object-fit: cover;
+    }
+
+    .custom-checkbox .form-check-input:checked {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+    }
+
+    .custom-radio .form-check-input:checked {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+    }
+</style>
+<div id="carouselExampleCaptions" class="carousel slide mb-2">
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div>
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img src="https://png.pngtree.com/thumb_back/fh260/back_our/20190621/ourmid/pngtree-cool-new-mobile-phone-promotion-purple-banner-image_183067.jpg">
+            <div class="carousel-caption d-none d-md-block">
+                <h5>First slide label</h5>
+                <p>Some representative placeholder content for the first slide.</p>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <img src="data:image/jpeg;base64,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">
+            <div class="carousel-caption d-none d-md-block">
+                <h5>Second slide label</h5>
+                <p>Some representative placeholder content for the second slide.</p>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwGX3z194o8gDMC5fsfWXZ457sNHEwk0iVTekcB4fhpA&s">
+            <div class="carousel-caption d-none d-md-block">
+                <h5>Third slide label</h5>
+                <p>Some representative placeholder content for the third slide.</p>
+            </div>
+        </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
+
+
+<div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="filterModalLabel">Filter Options</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                @*<form>
+                        <div class="mb-3">
+                            <label class="form-label">Choose an option</label>
+                            <div class="form-check custom-radio">
+                                <input class="form-check-input" type="radio" name="radioOptions" id="radio1" value="option1">
+                                <label class="form-check-label" for="radio1">
+                                    Option 1
+                                </label>
+                            </div>
+                            <div class="form-check custom-radio">
+                                <input class="form-check-input" type="radio" name="radioOptions" id="radio2" value="option2">
+                                <label class="form-check-label" for="radio2">
+                                    Option 2
+                                </label>
+                            </div>
+                            <div class="form-check custom-radio">
+                                <input class="form-check-input" type="radio" name="radioOptions" id="radio3" value="option3">
+                                <label class="form-check-label" for="radio3">
+                                    Option 3
+                                </label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Select brands</label>
+                            @foreach (var item in ViewBag.Brands as List<Data.DTOs.BrandDTO>)
+                            {
+                                <div class="form-check custom-checkbox">
+                                    <input class="form-check-input" type="checkbox" id="checkbox1" value="category1">
+                                    <label class="form-check-label" for="checkbox1">
+                                        Category 1
+                                    </label>
+                                </div>
+                            }
+
+                        </div>
+                        <button type="button" class="btn btn-primary">Apply Filters</button>
+                    </form>*@
+                @using (Html.BeginForm("Index", "Home", FormMethod.Get))
+                {
+                    <div class="mb-3">
+                        <label class="form-label">Select brands</label>
+                        @foreach (var brand in ViewBag.Brands as List<Data.DTOs.BrandDTO>)
+                        {
+                            var brands = ViewBag.BrandURL == null ? null : ViewBag.BrandURL as List<int>;
+                            bool isChecked = brands != null && brands.Contains(brand.Id);
+                            <div class="form-check custom-checkbox">
+                                <input class="form-check-input" type="checkbox" id="brand-@brand.Id" name="brands" value="@brand.Id" @(isChecked ? "checked" : "")>
+                                <label class="form-check-label" for="brand-@brand.Id">
+                                    @brand.BrandName
+                                </label>
+                            </div>
+                        }
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Select brands</label>
+                        @foreach (var color in ViewBag.Colors as List<Data.DTOs.ColorDTO>)
+                        {
+                            var colors = ViewBag.ColorURL == null ? null : ViewBag.ColorURL as List<int>;
+                            bool isChecked = colors != null && colors.Contains(color.Id!.Value);
+                            <div class="form-check custom-checkbox">
+                                <input class="form-check-input" type="checkbox" id="color-@color.Id" name="colors" value="@color.Id" @(isChecked ? "checked" : "")>
+                                <label class="form-check-label" for="color-@color.Id">
+                                    @color.NameColorMS
+                                </label>
+                            </div>
+                        }
+                    </div>
+                    <button type="submit" class="btn btn-primary">Apply Filters</button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<h1 class="text-center position-relative">
+    <button style="left: 0;top: 5px" type="button" class="btn btn-primary position-absolute" data-bs-toggle="modal" data-bs-target="#filterModal">
+        <i class="fa-solid fa-filter"></i>
+    </button>
+    PRODUCT PORTFOLIO
+</h1>
+@if (!Model.ListItem.Any())
+{
+    <div class="d-flex flex-column justify-content-center align-items-center">
+        <img src="https://cdni.iconscout.com/illustration/premium/thumb/sorry-item-not-found-3328225-2809510.png?f=webp" class="w-80" />
+        <a class="btn btn-outline-primary" href="/">CLEAR FILTER</a>
+    </div>
+}
+<div class="row row-cols-2 row-cols-md-4 g-4">
+    @foreach (var item in Model.ListItem)
+    {
+        <div class="col">
+            <div class="card h-100">
+                <a href="/product/Detail/@item.Id">
+                    <img src="/ImageProduct/@item.Url" style="height: 300px; object-fit: fill; width: 100%;">
+                </a>
+                <div class="card-body">
+                    <a href="/product/Detail/@item.Id" class="text-decoration-none">
+                        <h5 class="card-title">@item.Name.ToUpper() @item.Ram.ToUpper() @item.Color.ToUpper()</h5>
+                    </a>
+                    <p class="card-text mx-3 border-top border-bottom">
+                        <span><strong>- Brand: </strong>@item.Brand</span><br />
+                        <span><strong>- Ram: </strong>@item.Ram</span><br />
+                        <span><strong>- Category: </strong>@item.Category</span><br />
+                        <span><strong>- Screen: </strong>@item.Screen</span>
+                    </p>
+                </div>
+                <div class="d-flex justify-content-around" style="height: 50px">
+                    <p class="fs-5 text-warning">@item.Price.ToString("C", new System.Globalization.CultureInfo("vi-VN"))</p>
+                    <div>
+                        <form action="@Url.Action("AddItem", "Cart")" method="post">
+                            <input type="hidden" name="productId" value="@item.Id" />
+                            <input type="hidden" name="quantity" value="1" />
+                            <button type="submit" class="btn btn-secondary btn-sm d-block">
+                                <i class="fa-solid fa-cart-shopping"></i>
+                                Add to cart
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+</div>
+<nav aria-label="Page navigation example" class="d-flex justify-content-center my-2">
+    <ul class="pagination">
+        @if (Model.Info!.CurrentPage > 1)
+        {
+            <li class="page-item">
+                <a class="page-link" href="@BuildPaginationUrl(1)" aria-label="First">
+                    <span aria-hidden="true">&laquo;</span>
+                    <span class="sr-only">First</span>
+                </a>
+            </li>
+        }
+        @for (int i = 1; i <= Model.Info!.NumberOfPages; i++)
+        {
+            <li class="page-item @(i == Model.Info.CurrentPage ? "active" : "")">
+                <a class="page-link" href="@BuildPaginationUrl(i)">@i</a>
+            </li>
+        }
+        @if (Model.Info!.CurrentPage < Model.Info!.NumberOfPages)
+        {
+            <li class="page-item">
+                <a class="page-link" href="@BuildPaginationUrl(Model.Info.NumberOfPages)" aria-label="Last">
+                    <span aria-hidden="true">&raquo;</span>
+                    <span class="sr-only">Last</span>
+                </a>
+            </li>
+        }
+    </ul>
+
+
+
+</nav>

@@ -1,0 +1,81 @@
+﻿@model List<Data.ViewModel.CartLineVM>
+
+<div class="btn-group w-100" role="group" aria-label="Default button group" style="margin-bottom: 20px">
+    <a class="btn btn-outline-primary text-uppercase" href="/"><i class="fa-solid fa-house"></i> Return to home page</a>
+    <a class="btn btn-outline-warning text-uppercase" href="javascript:void(0);" onclick="document.getElementById('clear-cart-form').submit();">
+        <i class="fa-solid fa-ban"></i> Clear my cart
+    </a>
+    <form id="clear-cart-form" asp-controller="Cart" asp-action="Clear" method="post" style="display:none;">
+    </form>
+</div>
+
+<h2 class="text-center bg-light">
+    MY SHOPPING CART
+</h2>
+
+<h3><span class="border border-primary rounded-pill p-2 d-block text-center text-primary">Total Order Amount : @ViewBag.SumTotal.ToString("C", new System.Globalization.CultureInfo("vi-VN"))</span></h3>
+
+<div id="my-cart ">
+    @if (Model.Any())
+    {
+        @foreach (var item in Model)
+        {
+            <div class="card mb-3 w-100">
+                <div class="row g-0">
+                    <div class="col-md-3 d-flex justify-content-center">
+                        <img src="/ImageProduct/@item.ProductDetailUserVM.Urls.First()" style="width: 65%; height: 245px">
+                    </div>
+                    <div class="col-md-9">
+                        <div class="card-body">
+                            <h5 class="card-title">@item.ProductDetailUserVM.Name.ToUpper()</h5>
+                            <div class="row  mx-3 border-top border-bottom">
+                                <div class="col-7">
+                                    <p class="card-text">
+                                        <span><strong>- Brand: </strong>@item.ProductDetailUserVM.Brand</span><br />
+                                        <span><strong>- Ram: </strong>@item.ProductDetailUserVM.Ram</span><br />
+                                        <span><strong>- Category: </strong>@item.ProductDetailUserVM.Tags</span><br />
+                                        <span><strong>- Sim: </strong>@item.ProductDetailUserVM.Sims</span><br />
+                                        <span><strong>- Screen: </strong>@item.ProductDetailUserVM.Screen</span>
+                                    </p>
+                                </div>
+                                <div class="col-5 d-flex flex-column justify-content-sm-center">
+                                    <p class="card-text"><small class="text-body-secondary" style="color: red">Price: @item.ProductDetailUserVM.Price.ToString("C", new System.Globalization.CultureInfo("vi-VN"))</small>/x1</p>
+                                    <p class="card-text"><small class="text-body-secondary" style="color: red">Quantity: <input min="1" onblur="checkMinValue(this)" type="number" style="width: 60px; text-align: center" value="@(item.Quantity)" /> - TOTAL: @((item.ProductDetailUserVM.Price * item.Quantity).ToString("C", new System.Globalization.CultureInfo("vi-VN")))</small></p>
+                                </div>
+
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <div class="btn-group w-100" role="group" aria-label="Default button group" style="margin-top: 20px">
+                                    <a class="btn btn-outline-primary text-uppercase" href="/product/detail/@item.CartLineID"><i class="fa-regular fa-eye"></i> See details</a>
+                                    <button type="submit" class="btn btn-outline-warning text-uppercase" onclick="$('#@item.CartLineID').submit();"><i class="fa-solid fa-trash"></i> Delete</button>
+                                    <form id="@item.CartLineID" asp-action="RemoveItem" asp-controller="Cart" method="post">
+                                        <input hidden name="productId" value="@item.CartLineID" />
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="d-flex justify-content-center">
+            <img src="https://d16py1fyt83ijv.cloudfront.net/vedobi/assets/img/empty-cart.webp" alt="empty-cart.webp" />
+        </div>
+    }
+</div>
+
+<div class="btn-group w-100" role="group" aria-label="Default button group" style="margin-top: 20px">
+    <a class="btn btn-outline-primary text-uppercase" href="/"><i class="fa-solid fa-house"></i> Return to home page</a>
+    <a class="btn btn-outline-primary text-uppercase" href="/cart/checkout"><i class="fa-brands fa-cc-amazon-pay"></i> CheckOut</a>
+</div>
+
+<script>
+    function checkMinValue(input) {
+        if (input.value === '' || input.value < 1) {
+            input.value = 1;
+        }
+    }
+</script>

@@ -1,0 +1,4 @@
+﻿@model Web.Models.ViewModels.PriceViewInCartVM
+<span><strong>- Phí ship: </strong>@Model.ShippingFee.ToString("C", new System.Globalization.CultureInfo("vi-VN"))</span>
+<span><strong>- Tạm tính: </strong>@Model.Price.ToString("C", new System.Globalization.CultureInfo("vi-VN"))</span>
+<span><strong>- Tổng: </strong>@Model.PriceTotal.ToString("C", new System.Globalization.CultureInfo("vi-VN"))</span>

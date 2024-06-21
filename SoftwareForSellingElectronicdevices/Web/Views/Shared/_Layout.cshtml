@@ -1,0 +1,156 @@
+﻿@inject IHttpContextAccessor _iHttpContextAccessor
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Web</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Web.styles.css" asp-append-version="true" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .loader {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 2s linear infinite;
+        }
+
+        #content {
+            display: none; /* Ẩn nội dung trang web cho đến khi loading hoàn thành */
+        }
+    </style>
+</head>
+<body>
+    <div id="loading-overlay">
+        <div class="loader"></div>
+    </div>
+    <header class="container mt-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <i class="fa-solid fa-phone-volume fa-2xl" style="color: yellow"></i>
+                <a class="navbar-brand text-uppercase ms-2" asp-area="" asp-controller="Home" asp-action="Index" style="color: red;font-weight: 600">SMARTPHONE SHOP</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        @*<li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            </li>*@
+                    </ul>
+                    @if (!_iHttpContextAccessor.HttpContext!.User.Identity!.IsAuthenticated)
+
+                    {
+                        <div class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-regular fa-bell"></i>
+                                LOG IN NOW
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item" href="/account/login">
+                                        <i class="fa-solid fa-user"></i>
+                                        LOGIN
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="/account/register">
+                                        <i class="fa-solid fa-user-pen"></i>
+                                        REGISTER
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item position-relative" href="/cart/mycart">
+                                        <i class="fa-solid fa-cart-shopping"></i>
+                                        CART
+                                        <span class="badge bg-primary text-black position-absolute top-0 end-0">4</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    }
+                    else
+
+                    {
+                        <div class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-regular fa-bell"></i>
+                                USER: @_iHttpContextAccessor.HttpContext!.User.Identity!.Name!.ToUpper()
+                            </a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item position-relative" href="/cart/mycart">
+                                    <i class="fa-solid fa-cart-shopping"></i>
+                                    CART
+                                    <span class="badge bg-primary text-black position-absolute top-0 end-0">4</span>
+                                </a>
+                                <form id="logoutForm" action="/account/logout" method="post">
+                                    <button type="submit" class="dropdown-item">
+                                        <i class="fa-solid fa-right-from-bracket"></i>
+                                        LOGOUT
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="py-3 container shadow-sm bg-body-tertiary">
+        <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Home</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Features</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Pricing</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">FAQs</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">About</a></li>
+        </ul>
+        <p class="text-center text-body-secondary">© 2024 Company, Inc</p>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Đợi cho nội dung trang web được load hoàn thành
+        window.addEventListener("load", function () {
+            var loadingOverlay = document.getElementById("loading-overlay");
+            var content = document.getElementById("content");
+
+            // Ẩn overlay loading và hiển thị nội dung trang web
+            loadingOverlay.style.display = "none";
+        });
+    });
+
+</script>

@@ -1,0 +1,353 @@
+﻿@inject IHttpContextAccessor _iHttpContextAccessor;
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Enlink - Admin Dashboard Template</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="~/assets/images/logo/favicon.png">
+
+    <!-- page css -->
+    <link href="~/assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet">
+
+    <!-- Core css -->
+    <link href="~/assets/css/app.min.css" rel="stylesheet">
+    <link href="~/assets/vendors/datatables/dataTables.bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    @await RenderSectionAsync("Styles", required: false)
+
+</head>
+
+<body>
+    <div class="app">
+        <div class="layout">
+            <!-- Header START -->
+            <div class="header">
+                <div class="logo logo-dark">
+                    <a href="index.html">
+                        <img src="~/assets/images/logo/logo.png" alt="Logo">
+                        <img class="logo-fold" src="~/assets/images/logo/logo-fold.png" alt="Logo">
+                    </a>
+                </div>
+                <div class="logo logo-white">
+                    <a href="index.html">
+                        <img src="~/assets/images/logo/logo-white.png" alt="Logo">
+                        <img class="logo-fold" src="~/assets/images/logo/logo-fold-white.png" alt="Logo">
+                    </a>
+                </div>
+                <div class="nav-wrap">
+                    <ul class="nav-left">
+                    </ul>
+                    <ul class="nav-right">
+                        <li class="dropdown dropdown-animated scale-left">
+                            <a href="javascript:void(0);" data-toggle="dropdown">
+                                <i class="anticon anticon-bell notification-badge"></i>
+                            </a>
+                            <div class="dropdown-menu pop-notification">
+                                <div class="p-v-15 p-h-25 border-bottom d-flex justify-content-between align-items-center">
+                                    <p class="text-dark font-weight-semibold m-b-0">
+                                        <i class="anticon anticon-bell"></i>
+                                        <span class="m-l-10">Notification</span>
+                                    </p>
+                                    <a class="btn-sm btn-default btn" href="javascript:void(0);">
+                                        <small>View All</small>
+                                    </a>
+                                </div>
+                                <div class="relative">
+                                    <div class="overflow-y-auto relative scrollable" style="max-height: 300px">
+                                        <a href="javascript:void(0);" class="dropdown-item d-block p-15 border-bottom">
+                                            <div class="d-flex">
+                                                <div class="avatar avatar-blue avatar-icon">
+                                                    <i class="anticon anticon-mail"></i>
+                                                </div>
+                                                <div class="m-l-15">
+                                                    <p class="m-b-0 text-dark">You received a new message</p>
+                                                    <p class="m-b-0"><small>8 min ago</small></p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                        <a href="javascript:void(0);" class="dropdown-item d-block p-15 border-bottom">
+                                            <div class="d-flex">
+                                                <div class="avatar avatar-cyan avatar-icon">
+                                                    <i class="anticon anticon-user-add"></i>
+                                                </div>
+                                                <div class="m-l-15">
+                                                    <p class="m-b-0 text-dark">New user registered</p>
+                                                    <p class="m-b-0"><small>7 hours ago</small></p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                        <a href="javascript:void(0);" class="dropdown-item d-block p-15 border-bottom">
+                                            <div class="d-flex">
+                                                <div class="avatar avatar-red avatar-icon">
+                                                    <i class="anticon anticon-user-add"></i>
+                                                </div>
+                                                <div class="m-l-15">
+                                                    <p class="m-b-0 text-dark">System Alert</p>
+                                                    <p class="m-b-0"><small>8 hours ago</small></p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                        <a href="javascript:void(0);" class="dropdown-item d-block p-15 ">
+                                            <div class="d-flex">
+                                                <div class="avatar avatar-gold avatar-icon">
+                                                    <i class="anticon anticon-user-add"></i>
+                                                </div>
+                                                <div class="m-l-15">
+                                                    <p class="m-b-0 text-dark">You have a new update</p>
+                                                    <p class="m-b-0"><small>2 days ago</small></p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="dropdown dropdown-animated scale-left">
+                            <div class="pointer" data-toggle="dropdown">
+                                <div class="avatar avatar-image  m-h-10 m-r-15">
+                                    <img src="data:image/jpeg;base64,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" alt="">
+                                </div>
+                            </div>
+                            <div class="p-b-15 p-t-20 dropdown-menu pop-profile">
+                                <div class="p-h-20 p-b-15 m-b-10 border-bottom">
+                                    <div class="d-flex m-r-50">
+                                        <div class="avatar avatar-lg avatar-image">
+                                            <img src="data:image/jpeg;base64,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" alt="">
+                                        </div>
+                                        <div class="m-l-10">
+                                            <p class="m-b-0 text-dark font-weight-semibold">@_iHttpContextAccessor.HttpContext!.User.Identity!.Name</p>
+                                            <p class="m-b-0 opacity-07">Quản trị viên</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <a href="javascript:void(0);" class="dropdown-item d-block p-h-15 p-v-10">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <div>
+                                            <i class="anticon opacity-04 font-size-16 anticon-logout"></i>
+                                            <span class="m-l-10">Logout</span>
+                                        </div>
+                                        <i class="anticon font-size-10 anticon-right"></i>
+                                    </div>
+                                </a>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);" data-toggle="modal" data-target="#quick-view">
+                                <i class="anticon anticon-appstore"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Header END -->
+            <!-- Side Nav START -->
+            <partial name="~/Areas/Admin/Shared/_SideNavPartial.cshtml" />
+            <!-- Side Nav END -->
+            <!-- Page Container START -->
+            <div class="page-container">
+
+                <!-- Content Wrapper START -->
+                <div class="main-content">
+                    @RenderBody()
+                </div>
+                <!-- Content Wrapper END -->
+                <!-- Footer START -->
+                <footer class="footer">
+                    <div class="footer-content">
+                        <p class="m-b-0">Copyright © 2019 Theme_Nate. All rights reserved.</p>
+                        <span>
+                            <a href="" class="text-gray m-r-15">Term &amp; Conditions</a>
+                            <a href="" class="text-gray">Privacy &amp; Policy</a>
+                        </span>
+                    </div>
+                </footer>
+                <!-- Footer END -->
+
+            </div>
+            <!-- Page Container END -->
+            <!-- Search Start-->
+            <div class="modal modal-left fade search" id="search-drawer">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header justify-content-between align-items-center">
+                            <h5 class="modal-title">Search</h5>
+                            <button type="button" class="close" data-dismiss="modal">
+                                <i class="anticon anticon-close"></i>
+                            </button>
+                        </div>
+                        <div class="modal-body scrollable">
+                            <div class="input-affix">
+                                <i class="prefix-icon anticon anticon-search"></i>
+                                <input type="text" class="form-control" placeholder="Search">
+                            </div>
+                            <div class="m-t-30">
+                                <h5 class="m-b-20">Files</h5>
+                                <div class="d-flex m-b-30">
+                                    <div class="avatar avatar-cyan avatar-icon">
+                                        <i class="anticon anticon-file-excel"></i>
+                                    </div>
+                                    <div class="m-l-15">
+                                        <a href="javascript:void(0);" class="text-dark m-b-0 font-weight-semibold">Quater Report.exl</a>
+                                        <p class="m-b-0 text-muted font-size-13">by Finance</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex m-b-30">
+                                    <div class="avatar avatar-blue avatar-icon">
+                                        <i class="anticon anticon-file-word"></i>
+                                    </div>
+                                    <div class="m-l-15">
+                                        <a href="javascript:void(0);" class="text-dark m-b-0 font-weight-semibold">Documentaion.docx</a>
+                                        <p class="m-b-0 text-muted font-size-13">by Developers</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex m-b-30">
+                                    <div class="avatar avatar-purple avatar-icon">
+                                        <i class="anticon anticon-file-text"></i>
+                                    </div>
+                                    <div class="m-l-15">
+                                        <a href="javascript:void(0);" class="text-dark m-b-0 font-weight-semibold">Recipe.txt</a>
+                                        <p class="m-b-0 text-muted font-size-13">by The Chef</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex m-b-30">
+                                    <div class="avatar avatar-red avatar-icon">
+                                        <i class="anticon anticon-file-pdf"></i>
+                                    </div>
+                                    <div class="m-l-15">
+                                        <a href="javascript:void(0);" class="text-dark m-b-0 font-weight-semibold">Project Requirement.pdf</a>
+                                        <p class="m-b-0 text-muted font-size-13">by Project Manager</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="m-t-30">
+                                <h5 class="m-b-20">Members</h5>
+                                <div class="d-flex m-b-30">
+                                    <div class="avatar avatar-image">
+                                        <img src="~/assets/images/avatars/thumb-1.jpg" alt="">
+                                    </div>
+                                    <div class="m-l-15">
+                                        <a href="javascript:void(0);" class="text-dark m-b-0 font-weight-semibold">Erin Gonzales</a>
+                                        <p class="m-b-0 text-muted font-size-13">UI/UX Designer</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex m-b-30">
+                                    <div class="avatar avatar-image">
+                                        <img src="~/assets/images/avatars/thumb-2.jpg" alt="">
+                                    </div>
+                                    <div class="m-l-15">
+                                        <a href="javascript:void(0);" class="text-dark m-b-0 font-weight-semibold">Darryl Day</a>
+                                        <p class="m-b-0 text-muted font-size-13">Software Engineer</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex m-b-30">
+                                    <div class="avatar avatar-image">
+                                        <img src="~/assets/images/avatars/thumb-3.jpg" alt="">
+                                    </div>
+                                    <div class="m-l-15">
+                                        <a href="javascript:void(0);" class="text-dark m-b-0 font-weight-semibold">Marshall Nichols</a>
+                                        <p class="m-b-0 text-muted font-size-13">Data Analyst</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="m-t-30">
+                                <h5 class="m-b-20">News</h5>
+                                <div class="d-flex m-b-30">
+                                    <div class="avatar avatar-image">
+                                        <img src="~/assets/images/others/img-1.jpg" alt="">
+                                    </div>
+                                    <div class="m-l-15">
+                                        <a href="javascript:void(0);" class="text-dark m-b-0 font-weight-semibold">5 Best Handwriting Fonts</a>
+                                        <p class="m-b-0 text-muted font-size-13">
+                                            <i class="anticon anticon-clock-circle"></i>
+                                            <span class="m-l-5">25 Nov 2018</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Search End-->
+            <!-- Quick View START -->
+            <div class="modal modal-right fade quick-view" id="quick-view">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header justify-content-between align-items-center">
+                            <h5 class="modal-title">Theme Config</h5>
+                        </div>
+                        <div class="modal-body scrollable">
+                            <div class="m-b-30">
+                                <h5 class="m-b-0">Header Color</h5>
+                                <p>Config header background color</p>
+                                <div class="theme-configurator d-flex m-t-10">
+                                    <div class="radio">
+                                        <input id="header-default" name="header-theme" type="radio" checked value="default">
+                                        <label for="header-default"></label>
+                                    </div>
+                                    <div class="radio">
+                                        <input id="header-primary" name="header-theme" type="radio" value="primary">
+                                        <label for="header-primary"></label>
+                                    </div>
+                                    <div class="radio">
+                                        <input id="header-success" name="header-theme" type="radio" value="success">
+                                        <label for="header-success"></label>
+                                    </div>
+                                    <div class="radio">
+                                        <input id="header-secondary" name="header-theme" type="radio" value="secondary">
+                                        <label for="header-secondary"></label>
+                                    </div>
+                                    <div class="radio">
+                                        <input id="header-danger" name="header-theme" type="radio" value="danger">
+                                        <label for="header-danger"></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div>
+                                <h5 class="m-b-0">Side Nav Dark</h5>
+                                <p>Change Side Nav to dark</p>
+                                <div class="switch d-inline">
+                                    <input type="checkbox" name="side-nav-theme-toogle" id="side-nav-theme-toogle">
+                                    <label for="side-nav-theme-toogle"></label>
+                                </div>
+                            </div>
+                            <hr>
+                            <div>
+                                <h5 class="m-b-0">Folded Menu</h5>
+                                <p>Toggle Folded Menu</p>
+                                <div class="switch d-inline">
+                                    <input type="checkbox" name="side-nav-fold-toogle" id="side-nav-fold-toogle">
+                                    <label for="side-nav-fold-toogle"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Quick View END -->
+        </div>
+    </div>
+
+
+    <!-- Core Vendors JS -->
+    <script src="~/assets/js/vendors.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <!-- page js -->
+    <script src="~/assets/vendors/chartjs/Chart.min.js"></script>
+    <script src="~/assets/js/pages/dashboard-e-commerce.js"></script>
+
+    <!-- Core JS -->
+    <script src="~/assets/js/app.min.js"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+
+</html>
